@@ -29,15 +29,48 @@ app.get("/api/notes", function (req, res) {
 });
 
 app.post("/api/notes", function (req, res) {
-    //This one not working yet
-    console.log("Droid")
-    res.json(data);
+    var newData = req.body;
+    console.log(newData);
+
+    let id = 1;
+
+    if (data.length !== 0) {
+        id = data[data.length-1].id + 1
+    }
+
+    newData.id = id
+    data.push(newData)
+    //This one not printing to screen yet
+    fs.writeFile("./db/db.json", JSON.stringify(data), "utf-8", err =>{
+        if (err) return console.log(err)
+        // console.log("Droid")
+        res.json(newData);
+    })
+    
+    
 });
 
-app.delete("/api/notes", function (req, res) {
-    //This one not working yet
+
+
+app.delete("/api/notes/:id", function (req, res) {
+    var deleted = req.params.id;
     console.log("Deleting")
-    res.json(data);
+
+    for(let i = 0; i < data.length; i++) {
+
+        if(deleted === data[i].id);
+        console.log("Before Data:", data)
+        data.splice(i, 1);
+        console.log("After Data:", data)
+    }
+
+    fs.writeFile("./db/db.json", JSON.stringify(data), "utf-8", err =>{
+        if (err) return console.log(err)
+        // console.log("Droid")
+       
+        //This one not working yet
+        res.json(data);
+    })
 });
 
 
